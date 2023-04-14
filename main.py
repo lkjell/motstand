@@ -1,5 +1,7 @@
 # Example file showing a circle moving on screen
+from itertools import product
 import pygame
+
 
 # pygame setup
 pygame.init()
@@ -64,11 +66,11 @@ def draw_resistor(motstand, c1, c2, c3, c4, bg=(230, 242, 255)):
     for c, m in zip(colors, motstand):
         pygame.draw.rect(screen, c, m)
 
-def motstandPoscalc(motstandSize, winSize,   N, index):
+def motstandPoscalc(motstandSize, winSize, X, Y, r, c):
     (motstandW, motstandH) = motstandSize
     (winsizeW, winsizeH) = winSize
-    posX = (index + 1) * (winsizeW - motstandW*N) / (N + 1) + index*motstandW
-    posY = (index + 1) * (winsizeH - motstandH*N) / (N + 1) + index*motstandH
+    posX = (r + 1) * (winsizeW - motstandW*X) / (X + 1) + r*motstandW
+    posY = (c + 1) * (winsizeH - motstandH*Y) / (Y + 1) + c*motstandH
 
     return posX, posY
 
@@ -77,9 +79,12 @@ def motstand_create(motstandSize, N):
     (motstandW, motstandH) = motstandSize
     motstand = []
 
-    for index in range(N):
+    X = 5
+    Y = 3
+
+    for r, c in product(range(X), range(Y)):
         posX, posY = motstandPoscalc((motstandW, motstandH), 
-                                     (winsizeW, winsizeH), N, index)
+                                     (winsizeW, winsizeH), X, Y, r, c)
         motstand.append(motstand_create_single(posX, posY, motstandW, motstandH, 5))
 
     return motstand
