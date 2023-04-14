@@ -13,7 +13,7 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-def motstand_create(posX, posY, width, height, bandW):
+def motstand_create_single(posX, posY, width, height, bandW):
     resistorSizeW = width #200
     resistorSizeH = height #100
 
@@ -64,18 +64,25 @@ def draw_resistor(motstand, c1, c2, c3, c4, bg=(230, 242, 255)):
     for c, m in zip(colors, motstand):
         pygame.draw.rect(screen, c, m)
 
-    # pygame.draw.rect(screen, bg, motstand)
-    # pygame.draw.rect(screen, c1, band1)
-    # pygame.draw.rect(screen, c2, band2)
-    # pygame.draw.rect(screen, c3, band3)
-    # pygame.draw.rect(screen, c4, band4)
+def motstandPoscalc(motstandSize, winSize,   N, index):
+    (motstandW, motstandH) = motstandSize
+    (winsizeW, winsizeH) = winSize
+    posX = (index + 1) * (winsizeW - motstandW*N) / (N + 1) + index*motstandW
+    posY = (index + 1) * (winsizeH - motstandH*N) / (N + 1) + index*motstandH
 
-def motstandPosXcalc(motstandW, winsizeW, N, index):
-    # pos = (winsizeW - mostandW*N) / (N + 1)
+    return posX, posY
 
-    pos = (index + 1) * (winsizeW - motstandW*N) / (N + 1) + index*motstandW
-    return pos
 
+def motstand_create(motstandSize, N):
+    (motstandW, motstandH) = motstandSize
+    motstand = []
+
+    for index in range(N):
+        posX, posY = motstandPoscalc((motstandW, motstandH), 
+                                     (winsizeW, winsizeH), N, index)
+        motstand.append(motstand_create_single(posX, posY, motstandW, motstandH, 5))
+
+    return motstand
 
 while running:
     # poll for events
@@ -94,19 +101,24 @@ while running:
     # motstand1 = motstand_create(posX + motstandW + posX, 0, motstandW, 50, 5)
 
     motstandW = 100
-    N = 3
-    posX = motstandPosXcalc(motstandW, winsizeW, N, 0)
-    motstand = motstand_create(posX, 0, motstandW, 50, 5)
+    motstandH = 50
+    N = 5
 
-    posX = motstandPosXcalc(motstandW, winsizeW, N, 1)
-    motstand1 = motstand_create(posX, 0, motstandW, 50, 5)
+    motstand = motstand_create((motstandW, motstandH), N)
+    # posX = motstandPoscalc(motstandW, winsizeW, N, 0)
+    # motstand = motstand_create(posX, 0, motstandW, 50, 5)
+    #
+    # posX = motstandPoscalc(motstandW, winsizeW, N, 1)
+    # motstand1 = motstand_create(posX, 0, motstandW, 50, 5)
+    #
+    # posX = motstandPoscalc(motstandW, winsizeW, N, 2)
+    # motstand2 = motstand_create(posX, 0, motstandW, 50, 5)
 
-    posX = motstandPosXcalc(motstandW, winsizeW, N, 2)
-    motstand2 = motstand_create(posX, 0, motstandW, 50, 5)
+    for m in motstand:
+        draw_resistor(m, "red", "blue", "green", "yellow", "violet")
 
-    draw_resistor(motstand, "red", "blue", "green", "yellow", "violet")
-    draw_resistor(motstand1, "red", "blue", "green", "yellow", "violet")
-    draw_resistor(motstand2, "red", "blue", "green", "yellow", "violet")
+    # draw_resistor(motstand1, "red", "blue", "green", "yellow", "violet")
+    # draw_resistor(motstand2, "red", "blue", "green", "yellow", "violet")
 
     # rgb(230, 242, 255)
 
