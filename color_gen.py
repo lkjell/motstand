@@ -87,20 +87,21 @@ def random_color():
     return s1 + s2 + s3 + s4
 
 
-seed_n = 1703
-random.seed(seed_n)
-N = 30
+if __name__ == "__main__":
+    seed_n = 1703
+    random.seed(seed_n)
+    N = 30
 
-rcolor = [random_color() for i in range(N)]
+    rcolor = [random_color() for i in range(N)]
 
-with open(f"src/motstand_oppgaver_s{seed_n}.tex", "w") as f:
-    for c in rcolor:
-        print(resistor(*c), file=f)
+    with open(f"src/motstand_oppgaver_s{seed_n}.tex", "w") as f:
+        for c in rcolor:
+            print(resistor(*c), file=f)
 
-with open(f"fasit_motstand_oppgaver_s{seed_n}.txt", "w") as f:
-    for i, c in enumerate(rcolor):
-        value = resistor_value(*c)
-        print(f"{i + 1}) {c}\n    {value}\n", file=f)
+    with open(f"fasit_motstand_oppgaver_s{seed_n}.txt", "w") as f:
+        for i, c in enumerate(rcolor):
+            value = resistor_value(*c)
+            print(f"{i + 1}) {c}\n    {value}\n", file=f)
 
 
 

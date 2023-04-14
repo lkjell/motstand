@@ -2,6 +2,8 @@
 from itertools import product
 import pygame
 
+import color_gen as cg
+
 
 # pygame setup
 pygame.init()
@@ -75,19 +77,24 @@ def motstandPoscalc(motstandSize, winSize, X, Y, r, c):
     return posX, posY
 
 
-def motstand_create(motstandSize, N):
+def motstand_create(motstandSize, X, Y):
     (motstandW, motstandH) = motstandSize
     motstand = []
 
-    X = 5
-    Y = 3
-
-    for r, c in product(range(X), range(Y)):
+    for c, r in product(range(Y), range(X)):
         posX, posY = motstandPoscalc((motstandW, motstandH), 
                                      (winsizeW, winsizeH), X, Y, r, c)
         motstand.append(motstand_create_single(posX, posY, motstandW, motstandH, 5))
 
     return motstand
+
+motstandW = 100
+motstandH = 50
+X = 5
+Y = 4
+
+motstand_colors = [cg.random_color() for _ in range(X*Y//2)]
+motstand_colors += motstand_colors
 
 while running:
     # poll for events
@@ -105,11 +112,8 @@ while running:
     # motstand = motstand_create(posX, 0, motstandW, 50, 5)
     # motstand1 = motstand_create(posX + motstandW + posX, 0, motstandW, 50, 5)
 
-    motstandW = 100
-    motstandH = 50
-    N = 5
 
-    motstand = motstand_create((motstandW, motstandH), N)
+    motstand = motstand_create((motstandW, motstandH), X, Y)
     # posX = motstandPoscalc(motstandW, winsizeW, N, 0)
     # motstand = motstand_create(posX, 0, motstandW, 50, 5)
     #
@@ -119,8 +123,9 @@ while running:
     # posX = motstandPoscalc(motstandW, winsizeW, N, 2)
     # motstand2 = motstand_create(posX, 0, motstandW, 50, 5)
 
-    for m in motstand:
-        draw_resistor(m, "red", "blue", "green", "yellow", "violet")
+    for m, colors in zip(motstand, motstand_colors):
+        draw_resistor(m, *colors, "violet")
+        # draw_resistor(m, "red", "blue", "green", "yellow", "violet")
 
     # draw_resistor(motstand1, "red", "blue", "green", "yellow", "violet")
     # draw_resistor(motstand2, "red", "blue", "green", "yellow", "violet")
