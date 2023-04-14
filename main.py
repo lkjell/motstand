@@ -13,49 +13,69 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-resistorSizeW = 200
-resistorSizeH = 100
+def motstand_create(posX, posY, width, height, bandW):
+    resistorSizeW = width #200
+    resistorSizeH = height #100
 
-motstand = pygame.Rect(
-        winsizeW // 2 - resistorSizeW//2, 
-        winsizeH // 2 - resistorSizeH//2 - 200, 
-        resistorSizeW,
-        resistorSizeH,
-        )
+    motstandPosx = posX #winsizeW // 2 - resistorSizeW//2
+    motstandPosy = posY #winsizeH // 2 - resistorSizeH//2 + 200
 
-bandW = 10
-bandH = motstand.height
+    motstand = pygame.Rect(
+            motstandPosx,
+            motstandPosy,
+            resistorSizeW,
+            resistorSizeH,
+            )
 
-x, y = motstand.topleft
-w = motstand.width
-h = motstand.height
+    bandW = bandW #10
+    bandH = motstand.height
 
-band1 = pygame.Rect(x + 50, y, bandW, bandH)
+    x, y = motstand.topleft
+    w = motstand.width
+    h = motstand.height
 
-x, y = band1.topleft
-w = band1.width
-h = band1.height
+    band1 = pygame.Rect(x + 5*bandW, y, bandW, bandH)
 
-band2 = pygame.Rect(x + bandW*2, y, bandW, bandH)
+    x, y = band1.topleft
+    w = band1.width
+    h = band1.height
 
-x, y = band2.topleft
-w = band2.width
-h = band2.height
+    band2 = pygame.Rect(x + bandW*2, y, bandW, bandH)
 
-band3 = pygame.Rect(x + bandW*2, y, bandW, bandH)
+    x, y = band2.topleft
+    w = band2.width
+    h = band2.height
 
-x, y = band3.topleft
-w = band3.width
-h = band3.height
+    band3 = pygame.Rect(x + bandW*2, y, bandW, bandH)
 
-band4 = pygame.Rect(x + bandW*2*2, y, bandW, bandH)
+    x, y = band3.topleft
+    w = band3.width
+    h = band3.height
 
-def draw_resistor(c1, c2, c3, c4, bg=(230, 242, 255)):
-    pygame.draw.rect(screen, bg, motstand)
-    pygame.draw.rect(screen, c1, band1)
-    pygame.draw.rect(screen, c2, band2)
-    pygame.draw.rect(screen, c3, band3)
-    pygame.draw.rect(screen, c4, band4)
+    band4 = pygame.Rect(x + bandW*2*2, y, bandW, bandH)
+
+    return (motstand, band1, band2, band3, band4)
+
+
+
+def draw_resistor(motstand, c1, c2, c3, c4, bg=(230, 242, 255)):
+    colors = [bg, c1, c2, c3, c4]
+
+    for c, m in zip(colors, motstand):
+        pygame.draw.rect(screen, c, m)
+
+    # pygame.draw.rect(screen, bg, motstand)
+    # pygame.draw.rect(screen, c1, band1)
+    # pygame.draw.rect(screen, c2, band2)
+    # pygame.draw.rect(screen, c3, band3)
+    # pygame.draw.rect(screen, c4, band4)
+
+def motstandPosXcalc(motstandW, winsizeW, N, index):
+    # pos = (winsizeW - mostandW*N) / (N + 1)
+
+    pos = (index + 1) * (winsizeW - motstandW*N) / (N + 1) + index*motstandW
+    return pos
+
 
 while running:
     # poll for events
@@ -67,7 +87,26 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
-    draw_resistor("red", "blue", "green", "yellow", "violet")
+    # motstandW = 100
+    # posX = (winsizeW - 2*motstandW) / (1 + 2)
+
+    # motstand = motstand_create(posX, 0, motstandW, 50, 5)
+    # motstand1 = motstand_create(posX + motstandW + posX, 0, motstandW, 50, 5)
+
+    motstandW = 100
+    N = 3
+    posX = motstandPosXcalc(motstandW, winsizeW, N, 0)
+    motstand = motstand_create(posX, 0, motstandW, 50, 5)
+
+    posX = motstandPosXcalc(motstandW, winsizeW, N, 1)
+    motstand1 = motstand_create(posX, 0, motstandW, 50, 5)
+
+    posX = motstandPosXcalc(motstandW, winsizeW, N, 2)
+    motstand2 = motstand_create(posX, 0, motstandW, 50, 5)
+
+    draw_resistor(motstand, "red", "blue", "green", "yellow", "violet")
+    draw_resistor(motstand1, "red", "blue", "green", "yellow", "violet")
+    draw_resistor(motstand2, "red", "blue", "green", "yellow", "violet")
 
     # rgb(230, 242, 255)
 
