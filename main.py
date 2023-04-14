@@ -64,23 +64,26 @@ def draw_resistor(motstand, c1, c2, c3, c4, bg=(230, 242, 255)):
     for c, m in zip(colors, motstand):
         pygame.draw.rect(screen, c, m)
 
-def motstandPoscalc(motstandSize, winSize,   N, index):
+def motstandPoscalc(motstandSize, winSize, N, Y, index, yindex):
     (motstandW, motstandH) = motstandSize
     (winsizeW, winsizeH) = winSize
     posX = (index + 1) * (winsizeW - motstandW*N) / (N + 1) + index*motstandW
-    posY = (index + 1) * (winsizeH - motstandH*N) / (N + 1) + index*motstandH
+    posY = (yindex + 1) * (winsizeH - motstandH*Y) / (Y + 1) + yindex*motstandH
 
     return posX, posY
 
 
-def motstand_create(motstandSize, N):
+def motstand_create(motstandSize, N, Y):
     (motstandW, motstandH) = motstandSize
     motstand = []
-
+    # the reason they were going in a diagonal direction, is because
+    # vertical positioning was being determined by the horizontal indexing.
+    # adding an extra index for vertical positioning will fix this.
     for index in range(N):
-        posX, posY = motstandPoscalc((motstandW, motstandH), 
-                                     (winsizeW, winsizeH), N, index)
-        motstand.append(motstand_create_single(posX, posY, motstandW, motstandH, 5))
+        for yindex in range(Y):
+            posX, posY = motstandPoscalc((motstandW, motstandH), 
+                                        (winsizeW, winsizeH), N, Y, index, yindex)
+            motstand.append(motstand_create_single(posX, posY, motstandW, motstandH, 5))
 
     return motstand
 
@@ -103,8 +106,8 @@ while running:
     motstandW = 100
     motstandH = 50
     N = 5
-
-    motstand = motstand_create((motstandW, motstandH), N)
+    Y = 3
+    motstand = motstand_create((motstandW, motstandH), N, Y)
     # posX = motstandPoscalc(motstandW, winsizeW, N, 0)
     # motstand = motstand_create(posX, 0, motstandW, 50, 5)
     #
